@@ -23,6 +23,7 @@ public:
 	~UOpenAICallTranscriptions();
 
 	FString fileName;
+	FString CustomPathOverride;
 	
 	UPROPERTY(BlueprintAssignable, Category = "OpenAI")
 	FOnTranscriptionResponseRecievedPin Finished;
@@ -30,7 +31,7 @@ public:
 private:
 	
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "OpenAI")
-		static UOpenAICallTranscriptions* OpenAICallTranscriptions(FString fileName);
+		static UOpenAICallTranscriptions* OpenAICallTranscriptions(FString fileName, FString AbsolutePathOverride);
 
 	virtual void Activate() override;
 	void OnResponse(FHttpRequestPtr Request, FHttpResponsePtr Response, bool WasSuccessful);

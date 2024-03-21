@@ -19,10 +19,16 @@ UOpenAICallTranscriptions::~UOpenAICallTranscriptions()
 {
 }
 
-UOpenAICallTranscriptions* UOpenAICallTranscriptions::OpenAICallTranscriptions(FString fileName)
+UOpenAICallTranscriptions* UOpenAICallTranscriptions::OpenAICallTranscriptions(FString fileName, FString AbsolutePathOverride)
 {
 	UOpenAICallTranscriptions* BPNode = NewObject<UOpenAICallTranscriptions>();
 	BPNode->fileName = fileName + ".wav";
+	if (!AbsolutePathOverride.IsEmpty())
+	{
+		BPNode->CustomPathOverride = AbsolutePathOverride;
+
+	}
+	
 	return BPNode;
 }
 
@@ -43,6 +49,12 @@ void UOpenAICallTranscriptions::Activate()
 	// get the absolutePath to the wav file
 	FString relativePath = FPaths::ConvertRelativePathToFull(FPaths::ProjectSavedDir() + "BouncedWavFiles/" + fileName);
 	FString absolutePath = FPaths::ConvertRelativePathToFull(relativePath);
+	if (!CustomPathOverride.IsEmpty())
+	{
+		absolutePath = CustomPathOverride;
+	}
+
+	UE_LOG(LogTemp, Log, TEXT("LOG BEFORE SEND BYTES =: %s"), *absolutePath);
 	
 	FString tempHeader = "Bearer ";
 	tempHeader += _apiKey;
