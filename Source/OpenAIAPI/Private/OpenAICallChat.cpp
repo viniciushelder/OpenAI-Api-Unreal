@@ -140,7 +140,7 @@ void UOpenAICallChat::OnResponse(FHttpRequestPtr Request, FHttpResponsePtr Respo
 	TSharedRef<TJsonReader<>> reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
 	if (FJsonSerializer::Deserialize(reader, responseObject))
 	{
-		bool err = responseObject->HasField("error");
+		bool err = responseObject->HasField(TEXT("error"));
 
 		if (err)
 		{

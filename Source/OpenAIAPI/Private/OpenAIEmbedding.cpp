@@ -97,8 +97,7 @@ void UOpenAIEmbedding::StartEmbedding()
 		// ensure fast connection, I will retry it
 		HttpRequest->SetTimeout(10.f);
 		
-		HttpRequest->OnRequestProgress().BindUObject(this, &UOpenAIEmbedding::HandleRequestProgress);
-		HttpRequest->OnProcessRequestComplete().BindUObject(this, &UOpenAIEmbedding::OnResponse);
+		HttpRequest->OnRequestProgress64().BindUObject(this, &UOpenAIEmbedding::HandleRequestProgress);
 		UE_LOG(LogEmbedding, Log, TEXT("UOpenAIEmbedding BindProcessRequestComplete"));
 
 		CurrentRequest = HttpRequest;
@@ -119,7 +118,7 @@ void UOpenAIEmbedding::CancelRequest()
 {
 	if (CurrentRequest.IsValid() && CurrentRequest->GetStatus() == EHttpRequestStatus::Processing)
 	{
-		CurrentRequest->OnRequestProgress().Unbind();
+		CurrentRequest->OnRequestProgress64().Unbind();
 		CurrentRequest->OnProcessRequestComplete().Unbind();
 		CurrentRequest->CancelRequest();
 		CurrentRequest.Reset();
@@ -218,7 +217,7 @@ UOpenAIEmbedding* UOpenAIEmbedding::Embedding(const FEmbeddingSettings& Embeddin
 	return OpenAIEmbeddingInstance;
 }
 
-void UOpenAIEmbedding::HandleRequestProgress(FHttpRequestPtr Request, int32 BytesSent, int32 BytesReceived)
+void UOpenAIEmbedding::HandleRequestProgress(FHttpRequestPtr Request, uint64 BytesSent, uint64 BytesReceived)
 {
 	UE_LOG(LogEmbedding, Log, TEXT("UOpenAIEmbedding Heartbeat - Sent: %d, Received: %d"), BytesSent, BytesReceived);
 }
