@@ -119,11 +119,12 @@ void UOpenAICallTranscriptions::OnResponse(FHttpRequestPtr Request, FHttpRespons
 	{
 		FString TextValue;
 		if (JsonObject->TryGetStringField(TEXT("text"), TextValue))
-		{
+		{ 
 			UE_LOG(LogTemp, Log, TEXT("Extracted text: %s"), *TextValue);
 		}
 		else
 		{
+			UE_LOG(LogTemp, Warning, TEXT("Parsed Full Response: %s"), *Response->GetContentAsString())
 			Finished.Broadcast("", "Failed to get 'text' field from JSON response", false);
 		}
 
