@@ -44,17 +44,23 @@ void UOpenAICallChat::Activate()
 		switch (chatSettings.model)
 		{
 		case EOAChatEngineType::GPT_3_5_TURBO:
-			apiMethod = "gpt-3.5-turbo";
+				apiMethod = "gpt-3.5-turbo";
 			break;
 		case EOAChatEngineType::GPT_4:
-			apiMethod = "gpt-4";
+				apiMethod = "gpt-4";
 			break;
 		case EOAChatEngineType::GPT_4_32k:
-			apiMethod = "gpt-4-32k";
+				apiMethod = "gpt-4-32k";
 			break;
 			case EOAChatEngineType::GPT_4_TURBO:
 				apiMethod = "gpt-4-0125-preview";
 			break;
+		case EOAChatEngineType::GPT_4o:
+				apiMethod = "gpt-4o";
+			break;
+		case EOAChatEngineType::GPT_4o_mini:
+				apiMethod = "gpt-4o-mini";
+			break;		
 		}
 		
 		//TODO: add aditional params to match the ones listed in the curl response in: https://platform.openai.com/docs/api-reference/making-requests

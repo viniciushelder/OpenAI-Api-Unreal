@@ -29,6 +29,8 @@ enum class EOAChatEngineType : uint8
 	GPT_4 = 1 UMETA(ToolTip = "More capable than any GPT-3.5 model, able to do more complex tasks, and optimized for chat. Will be updated with our latest model iteration."),
 	GPT_4_32k = 2 UMETA(ToolTip = "Same capabilities as the base gpt-4 model but with 4x the context length. Will be updated with our latest model iteration."),
 	GPT_4_TURBO = 3 UMETA(ToolTip = "The latest GPT-4 model with improved instruction following, JSON mode, reproducible outputs, parallel function calling, and more. Returns a maximum of 4,096 output tokens. This preview model is not yet suited for production traffic. Learn more."),
+	GPT_4o = 4 UMETA(ToolTip = "The GPT-4-O is an advanced AI optimized for real-time operations and high computational efficiency"),
+   	GPT_4o_mini = 5 UMETA(ToolTip = "GPT-4-O-Mini offers a lightweight, scalable alternative for edge devices and smaller applications"),
 };
 
 UENUM(BlueprintType)
