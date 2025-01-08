@@ -16,10 +16,12 @@ UOpenAICallChat::~UOpenAICallChat()
 {
 }
 
-UOpenAICallChat* UOpenAICallChat::OpenAICallChat(FChatSettings chatSettingsInput)
+UOpenAICallChat* UOpenAICallChat::OpenAICallChat(FChatSettings chatSettingsInput, FString customModel)
 {
 	UOpenAICallChat* BPNode = NewObject<UOpenAICallChat>();
 	BPNode->chatSettings = chatSettingsInput;
+	BPNode->customModelOverride = customModel;
+	
 	return BPNode;
 }
 
@@ -62,6 +64,11 @@ void UOpenAICallChat::Activate()
 				apiMethod = "gpt-4o-mini";
 			break;		
 		}
+		if (!customModelOverride.IsEmpty())
+		{
+			apiMethod = customModelOverride;
+		}
+
 		
 		//TODO: add aditional params to match the ones listed in the curl response in: https://platform.openai.com/docs/api-reference/making-requests
 	
