@@ -28,9 +28,11 @@ public:
 	FOnResponseRecievedPin Finished;
 
 private:
+	UPROPERTY(meta = (BlueprintReadWrite = false))
+	FString customModelOverride;
 
-	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "OpenAI")
-		static UOpenAICallChat* OpenAICallChat(FChatSettings chatSettings);
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true", Tooltip = "This calls the chat completion api from OpenAI - https://api.openai.com/v1/chat/completions"), Category = "OpenAI")
+		static UOpenAICallChat* OpenAICallChat(FChatSettings chatSettings, FString customModel);
 
 	virtual void Activate() override;
 	void OnResponse(FHttpRequestPtr Request, FHttpResponsePtr Response, bool WasSuccessful);

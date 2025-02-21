@@ -16,10 +16,12 @@ UOpenAICallChat::~UOpenAICallChat()
 {
 }
 
-UOpenAICallChat* UOpenAICallChat::OpenAICallChat(FChatSettings chatSettingsInput)
+UOpenAICallChat* UOpenAICallChat::OpenAICallChat(FChatSettings chatSettingsInput, FString customModel)
 {
 	UOpenAICallChat* BPNode = NewObject<UOpenAICallChat>();
 	BPNode->chatSettings = chatSettingsInput;
+	BPNode->customModelOverride = customModel;
+	
 	return BPNode;
 }
 
@@ -62,6 +64,11 @@ void UOpenAICallChat::Activate()
 				apiMethod = "gpt-4o-mini";
 			break;		
 		}
+		if (!customModelOverride.IsEmpty())
+		{
+			apiMethod = customModelOverride;
+		}
+
 		
 		//TODO: add aditional params to match the ones listed in the curl response in: https://platform.openai.com/docs/api-reference/making-requests
 	
@@ -144,14 +151,31 @@ void UOpenAICallChat::OnResponse(FHttpRequestPtr Request, FHttpResponsePtr Respo
 
 	TSharedPtr<FJsonObject> responseObject;
 	TSharedRef<TJsonReader<>> reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+
+	
+
+
+
 	if (FJsonSerializer::Deserialize(reader, responseObject))
 	{
 		bool err = responseObject->HasField(TEXT("error"));
-
+		
 		if (err)
 		{
+			TSharedPtr<FJsonObject> ErrorJsonObject = responseObject->GetObjectField(TEXT("error")); //Error Object
+
+			if (ErrorJsonObject.IsValid() && ErrorJsonObject->HasField(TEXT("message"))) //Try to parse and send the actual OpenAI Error instead of outputting the whole error json as a string;
+			{
+				FString ErrorDescription = ErrorJsonObject->GetStringField(TEXT("message")); //Message field in Error Object
+				FString ErrorMessage = FString::Printf(TEXT("OpenAPI Error: %s"), *ErrorDescription); //Parsing the message for a nice output
+				Finished.Broadcast({}, ErrorMessage, false); //Actually outputing the message to the BPnode
+				return;
+			};
+			
+			FString ResponseContent = Response->GetContentAsString(); //saving as string
+			
 			UE_LOG(LogTemp, Warning, TEXT("%s"), *Response->GetContentAsString());
-			Finished.Broadcast({}, TEXT("Api error"), false);
+			Finished.Broadcast({}, ResponseContent, false);
 			return;
 		}
 
